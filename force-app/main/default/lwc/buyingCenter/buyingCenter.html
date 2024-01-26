@@ -2,15 +2,13 @@
 <template>
     <div class="slds-p-around_medium lgc-bg">
         <lightning-card title="Buying Center">
-            <lightning-datatable key-field="Id" data={contacts} columns={columns}>
-            </lightning-datatable>
+            <div class="slds-m-around_medium">
+                <svg class="d3" width={svgWidth} height={svgHeight} lwc:dom="manual">
+                </svg>
+            </div>
         </lightning-card>
-    </div>
-
-    <div class="slds-m-around_medium">
-      <svg class="d3" width={svgWidth} height={svgHeight} lwc:dom="manual">
-        
-      </svg>
+        <lightning-datatable key-field="Id" data={contacts} columns={columns}>
+        </lightning-datatable>
     </div>
     
 </template>

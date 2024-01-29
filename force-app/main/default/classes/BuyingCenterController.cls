@@ -10,4 +10,16 @@ public with sharing class BuyingCenterController {
         WITH SECURITY_ENFORCED
         ];
     }
+
+    @AuraEnabled(cacheable=true)
+    public static List<Relationship__c> getRelationships(List<Id> contactIds){
+        System.debug(contactIds);
+        return [
+        SELECT Id, Name, Relationship_Type__c, Related_Contact__c, Contact__c
+        FROM Relationship__c 
+        WHERE Contact__c IN :contactIds
+        WITH SECURITY_ENFORCED
+        ];
+    }
+
 }

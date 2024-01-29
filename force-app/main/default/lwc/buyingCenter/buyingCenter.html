@@ -1,13 +1,15 @@
 <!-- sldsValidatorIgnore -->
 <template>
     <div class="slds-p-around_medium lgc-bg">
-        <lightning-card title="Buying Center">
+        <lightning-card class="container" title="Buying Center">
             <div class="slds-m-around_medium">
                 <svg class="d3" width={svgWidth} height={svgHeight} lwc:dom="manual">
                 </svg>
             </div>
         </lightning-card>
-        <lightning-datatable key-field="Id" data={contacts} columns={columns}>
+        <lightning-datatable key-field="Id" data={contacts} columns={contactColumns}>
+        </lightning-datatable>
+        <lightning-datatable key-field="Id" data={relationships} columns={relationshipColumns}>
         </lightning-datatable>
     </div>
     

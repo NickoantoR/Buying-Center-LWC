@@ -1,7 +1,9 @@
 public with sharing class BuyingCenterController {
 
+    // Fetches Contacts related to the specified Account with BuyingCenterMember flag true
     @AuraEnabled(cacheable=true)
     public static List<Contact> getContacts(Id accountId){
+        // Retrieves ID, Name, Role, and Character of Contacts ensuring security enforcement
         return [
         SELECT Id, Name, BuyingCenterRole__c, BuyingCenterCharacter__c 
         FROM Contact 
@@ -11,9 +13,10 @@ public with sharing class BuyingCenterController {
         ];
     }
 
+    // Fetches Relationship__c records linked to the specified contactIds
     @AuraEnabled(cacheable=true)
     public static List<Relationship__c> getRelationships(List<Id> contactIds){
-        System.debug(contactIds);
+        // Retrieves relationships ensuring security enforcement
         return [
         SELECT Id, Name, Relationship_Type__c, Related_Contact__c, Contact__c
         FROM Relationship__c 
@@ -21,5 +24,4 @@ public with sharing class BuyingCenterController {
         WITH SECURITY_ENFORCED
         ];
     }
-
 }

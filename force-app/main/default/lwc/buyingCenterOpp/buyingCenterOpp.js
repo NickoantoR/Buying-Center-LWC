@@ -11,7 +11,7 @@ import getRelationships from '@salesforce/apex/BuyingCenterController.getRelatio
 // Reference to D3.js library stored in Salesforce static resources
 import D3 from '@salesforce/resourceUrl/d3';
 
-export default class BuyingCenter extends NavigationMixin (LightningElement) {
+export default class BuyingCenterOpp extends NavigationMixin (LightningElement) {
 
     // Variables for handling errors and checking D3 initialization status
     error;

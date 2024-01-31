@@ -158,6 +158,8 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
 
                 linkText.attr('x', d => (d.source.x + d.target.x) / 2)
                         .attr('y', d => (d.source.y + d.target.y) / 2);
+
+                d3Utility.enforceBoundaries(DATA.nodeData, width, height);
             };
 
             // Initialize force simulation with nodes, charge, collision forces, and tick function
@@ -262,8 +264,9 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
 
             // Function to handle drag event
             function dragged(event, d) {
-                d.fx = event.x;
-                d.fy = event.y;
+                const nodeRadius = halfRect ;
+                d.fx = Math.max(nodeRadius, Math.min(width - nodeRadius, event.x));
+                d.fy = Math.max(nodeRadius, Math.min(height - nodeRadius, event.y));
                 link.attr('x1', link => link.source.x)
                     .attr('y1', link => link.source.y)
                     .attr('x2', link => link.target.x)

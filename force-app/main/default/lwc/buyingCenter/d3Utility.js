@@ -53,11 +53,11 @@ export default class d3Utility {
         // Determine color based on the type of relationship
         switch (relationshipType) {
             case 'Positive':
-                return 'green';
+                return 'lightgreen';
             case 'Negative':
-                return 'red';
+                return '#ea5b0b';
             case 'Neutral':
-                return 'yellow';
+                return '#FDC300';
             default:
                 return 'grey'; // Default color if neither positive or negative
         }
@@ -70,15 +70,24 @@ export default class d3Utility {
         if(attitudeObject) {
             switch (attitudeObject.AttitudeToOpp__c) {
                 case 'Positive':
-                    return 'green';
+                    return 'lightgreen';
                 case 'Negative':
-                    return 'red';
+                    return '#ea5b0b';
                 case 'Neutral':
-                    return 'yellow';
+                    return '#FDC300';
                 default:
                     return 'grey'; // Default color if neither positive or negative
             }
         }
         return 'white'; // Default color if attitudeObject is not found
+    }
+
+    // Method to ensure nodes stay within the SVG boundaries
+    enforceBoundaries(nodeData, width, height) {
+        nodeData.forEach(node => {
+            const nodeRadius = width / 10; // Adjust based on your node size
+            node.x = Math.max(nodeRadius, Math.min(width - nodeRadius, node.x));
+            node.y = Math.max(nodeRadius, Math.min(height - nodeRadius, node.y));
+        });
     }
 }

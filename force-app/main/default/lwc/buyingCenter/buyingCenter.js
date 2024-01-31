@@ -2,7 +2,9 @@
 import { NavigationMixin } from 'lightning/navigation';
 import { loadScript } from 'lightning/platformResourceLoader';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api } from 'lwc';
+
+import D3Utility from './d3Utility';
 
 // Apex classes for fetching data from Salesforce
 import getContacts from '@salesforce/apex/BuyingCenterController.getContacts';
@@ -28,29 +30,37 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
     // Record ID passed to the component, used for fetching related data
     @api recordId;
 
-    // Fetch contacts related to the accountId using a wire service.
-    @wire(getContacts, {accountId: '$recordId'})
-    wiredContacts(result) {
-        if (result.data) {
-            this.contacts = result.data;
-            this.error = undefined;
 
-            // Extract contact IDs to fetch relationships
-            const contactIds = this.contacts.map(contact => contact.Id);
-            this.fetchRelationships(contactIds);
-        } else if (result.error) {
-            this.contacts = undefined;
-            this.error = result.error;
+    // Lifecycle hook called after the component is inserted into the DOM
+    async connectedCallback() {
+        if (this.d3Initialized) {
+            return;
         }
+        this.d3Initialized = true;
+        // Load D3.js library and then initialize the D3 visualization
+        await Promise.all([
+            loadScript(this, D3 + '/d3.v7.js')
+        ]).then(() => {
+            this.fetchData();
+        }).catch((error) => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: "Error loading D3",
+                    message: error.message,
+                    variant: "error",
+                }),
+            );
+        });
     }
 
-    // Fetch relationships for the given contacts
-    async fetchRelationships(contactIds) {
+    async fetchData() {
         try {
+            this.contacts = await getContacts({ accountId: this.recordId });
+            const contactIds = this.contacts.map(contact => contact.Id);
             this.relationships = await getRelationships({ contactIds });
+            this.initializeD3(); // Call this here if data is ready
         } catch (error) {
             this.error = error;
-            this.relationships = undefined;
         }
     }
 
@@ -64,29 +74,6 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                 this.svgHeight = rect.width * 0.925; // Maintain aspect ratio
             }
         }
-    }
-
-    // Lifecycle hook called after the component is inserted into the DOM
-    async renderedCallback() {
-        if (this.d3Initialized) {
-            return;
-        }
-        this.d3Initialized = true;
-
-        // Load D3.js library and then initialize the D3 visualization
-        await Promise.all([
-            loadScript(this, D3 + '/d3.v7.js')
-        ]).then(() => {
-            this.initializeD3();
-        }).catch((error) => {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: "Error loading D3",
-                    message: error.message,
-                    variant: "error",
-                }),
-            );
-        });
     }
 
     // Initialize D3 visualization
@@ -105,10 +92,10 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
             const width = this.svgWidth;
             const height = this.svgHeight;
             const halfRect = width / 10; // Half the width of the rectangle representing a node
-            const circle1CenterX = width / 2 - 1.6 * halfRect;
-            const circle2CenterX = width / 2 + 1.6 * halfRect;
-            const centerY = height / 1.75;
             const fontSize = width / 45; // Dynamically set font size based on SVG width
+
+            const d3Utility = new D3Utility();
+            d3Utility.drawStaticElements(svg, width, height);
 
             // Define role positions for nodes on the SVG based on their role
             const rolePositions = {
@@ -144,7 +131,7 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                     return{
                         source: nodeMap.get(relationship.Contact__c),
                         target: nodeMap.get(relationship.Related_Contact__c),
-                        color: getColorBasedOnRelationshipType(relationship.Relationship_Type__c),
+                        color: d3Utility.getColorBasedOnRelationshipType(relationship.Relationship_Type__c),
                         name: relationship.Name
                     };
                 }
@@ -185,45 +172,6 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                 .on('start', dragstarted)
                 .on('drag', dragged)
                 .on('end', dragended);
-            
-            // Append a circle SVG element to represent influence zones
-            svg.append('circle')
-                .attr('cx', circle1CenterX)
-                .attr('cy', centerY)
-                .attr('r', height / 2.75) // Radius des Kreises
-                .style('fill', 'white')
-                .style('fill-opacity', 0.2)
-                .style('stroke', 'black')
-                .style('stroke-width', 2)
-
-            // Append text SVG element to label the influence zone
-            svg.append('text')
-                .attr('dx', width / 10)
-                .attr('dy', height / 4)
-                .text('Macht')
-                .style('fill', 'black')
-                .style('text-anchor', 'middle')
-                .style('font-weight', 'bold')
-                .style('font-size', `${fontSize}px`)
-
-            // Repeat for urgency zone
-            svg.append('circle')
-                .attr('cx', circle2CenterX)
-                .attr('cy', centerY)
-                .attr('r', height / 2.75) // Radius des Kreises
-                .style('fill', 'white')
-                .style('fill-opacity', 0.2)
-                .style('stroke', 'black')
-                .style('stroke-width', 2);
-
-            svg.append('text')
-                .attr('dx', width / 1.1)
-                .attr('dy', height / 4)
-                .text('Dringlichkeit')
-                .style('fill', 'black')
-                .style('text-anchor', 'middle')
-                .style('font-weight', 'bold')
-                .style('font-size', `${fontSize}px`)
             
             // Create link elements for each relationship
             const link = svg.append('g')
@@ -300,19 +248,6 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                 .attr('fill', 'black') // Set the text color
                 .attr('text-anchor', 'middle')
                 .style('font-size', `${fontSize}px`)
-
-            // Function to get color based on relationship type
-            function getColorBasedOnRelationshipType(relationshipType) {
-                // Determine color based on the type of relationship
-                switch (relationshipType) {
-                    case 'Positive':
-                        return 'green';
-                    case 'Negative':
-                        return 'red';
-                    default:
-                        return 'black'; // Default color if neither positive or negative
-                }
-            }
 
             // Function to handle drag start event
             function dragstarted(event, d) {

@@ -1,4 +1,3 @@
-
 export default class d3Utility {
 
     // Method to draw static elements like influence zones and their labels
@@ -47,5 +46,39 @@ export default class d3Utility {
             .style('text-anchor', 'middle')
             .style('font-weight', 'bold')
             .style('font-size', `${fontSize}px`)
+    }
+
+    // Function to get color based on relationship type
+    getColorBasedOnRelationshipType(relationshipType) {
+        // Determine color based on the type of relationship
+        switch (relationshipType) {
+            case 'Positive':
+                return 'green';
+            case 'Negative':
+                return 'red';
+            case 'Neutral':
+                return 'yellow';
+            default:
+                return 'grey'; // Default color if neither positive or negative
+        }
+    }
+
+    // Function to get color based on attitude type
+    getColorBasedOnAttitude(contactId, attitudes) {
+        // Find the attitude object for the given contactId
+        let attitudeObject = attitudes.find(attitude => attitude.Contact__c === contactId);
+        if(attitudeObject) {
+            switch (attitudeObject.AttitudeToOpp__c) {
+                case 'Positive':
+                    return 'green';
+                case 'Negative':
+                    return 'red';
+                case 'Neutral':
+                    return 'yellow';
+                default:
+                    return 'grey'; // Default color if neither positive or negative
+            }
+        }
+        return 'white'; // Default color if attitudeObject is not found
     }
 }

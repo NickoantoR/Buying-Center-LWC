@@ -195,7 +195,7 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                 .on('click', function(event, d) {
                     this.handleNodeClick(d.id); // Handle click event on nodes
                 }.bind(this))
-                .call(drag) // Apply drag behavior
+                .call(drag); // Apply drag behavior
 
                 // Append a rectangle to each node group to represent the node visually
                 node.append('rect')
@@ -208,6 +208,14 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                     .attr('stroke', 'black')
                     .attr('stroke-width', 1)
                     .attr('fill', 'white')
+                    .on('mouseover', function() {
+                        d3.select(this)
+                        .attr('stroke-width', 2)
+                    })
+                    .on('mouseout', function() {
+                        d3.select(this)
+                        .attr('stroke-width', 1)
+                    });
 
                 // Append name text to each node group
                 node.append('text')
@@ -217,7 +225,7 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                     .style('fill', 'black')
                     .style('text-anchor', 'start')
                     .style('font-weight', 'bold')
-                    .style('font-size', `${fontSize}px`)
+                    .style('font-size', `${fontSize}px`);
 
                 // Append role text to each node group
                 node.append('text')
@@ -226,7 +234,7 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                     .text(d => d.group)
                     .style('fill', 'black')
                     .style('text-anchor', 'start')
-                    .style('font-size', `${fontSize}px`)
+                    .style('font-size', `${fontSize}px`);
 
                 // Append character text to each node group
                 node.append('text')
@@ -235,7 +243,7 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                     .text(d => d.character)
                     .style('fill', 'black')
                     .style('text-anchor', 'start')
-                    .style('font-size', `${fontSize}px`)
+                    .style('font-size', `${fontSize}px`);
 
             // Create text elements for each link to show relationship names
             const linkText = svg.append('g')
@@ -250,6 +258,17 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
                 .attr('fill', 'black') // Set the text color
                 .attr('text-anchor', 'middle')
                 .style('font-size', `${fontSize}px`)
+                .style('opacity', 0.5) // Make text semi-transparent
+                .on('mouseover', function() {
+                    d3.select(this)
+                    .style('opacity', 1) // Make text fully visible on mouseover
+                    .style('font-weight', 'bold')
+                })
+                .on('mouseout', function() {
+                    d3.select(this)
+                    .style('opacity', 0.5) // Revert to semi-transparent when not hovering
+                    .style('font-weight', 'normal')
+                });
 
             // Function to handle drag start event
             function dragstarted(event, d) {
@@ -286,6 +305,7 @@ export default class BuyingCenter extends NavigationMixin (LightningElement) {
             return;
         };
     }
+
     // Method to handle navigation to a specific contact record page
     handleNodeClick(contactId) {
         this[NavigationMixin.Navigate]({

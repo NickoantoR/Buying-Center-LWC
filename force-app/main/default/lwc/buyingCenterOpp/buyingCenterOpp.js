@@ -1,3 +1,10 @@
+/* eslint-disable consistent-return */
+/* eslint-disable array-callback-return */
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-undef */
+/* eslint-disable no-extra-semi */
+/* eslint-disable no-shadow */
+/* eslint-disable no-inner-declarations */
 // Import statements for necessary Salesforce modules and components
 import { NavigationMixin } from 'lightning/navigation';
 import { loadScript } from 'lightning/platformResourceLoader';
@@ -187,7 +194,7 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
                 .enter()
                 .append('line')
                 .attr('stroke', d => d.color) // Could later be changed to the Sentiment on an opportunity
-                .attr('stroke-width', '2');
+                .attr('stroke-width', fontSize/4);
 
             // Create node elements for each contact
             const node = svg.append('g')
@@ -318,6 +325,24 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
                 recordId: contactId,
                 objectApiName: 'Contact',
                 actionName: 'view'
+            },
+        });
+    }
+    handleNewRelationship(){
+        this[NavigationMixin.Navigate]({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'Relationship__c',
+                actionName: 'new'
+            },
+        });
+    }
+    handleNewAttitude(){
+        this[NavigationMixin.Navigate]({
+            type: 'standard__objectPage',
+            attributes: {
+                objectApiName: 'AttitudeToOpp__c',
+                actionName: 'new'
             },
         });
     }

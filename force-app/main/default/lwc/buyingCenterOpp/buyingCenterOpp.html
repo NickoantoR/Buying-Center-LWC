@@ -1,10 +1,16 @@
 <!-- sldsValidatorIgnore -->
 <template>
     <lightning-card title="Buying Center">
-        <div class="slds-p-around_medium lgc-bg">
-            <div class="container slds-m-around_medium">
+        <div class="slds-p-horizontal_medium">
+            <div class="container slds-m-horizontal_medium">
                 <svg class="d3" lwc:dom="manual"></svg>
             </div>
+        </div>
+        <div class="slds-p-horizontal_medium lgc-bg">
+            <lightning-button-group>
+                <lightning-button label="New Relationship" onclick = {handleNewRelationship} variant="brand"></lightning-button>
+                <lightning-button label="New Attitude" onclick = {handleNewAttitude}></lightning-button>
+            </lightning-button-group>
         </div>
     </lightning-card>
 </template>

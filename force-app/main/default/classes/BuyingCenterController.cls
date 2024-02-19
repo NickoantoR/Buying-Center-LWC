@@ -34,7 +34,7 @@ public with sharing class BuyingCenterController {
     }
 
     // Fetches Relationship__c records linked to the specified contactIds
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<Relationship__c> getRelationships(List<Id> contactIds){
         // Retrieves relationships ensuring security enforcement
         return [
@@ -45,10 +45,10 @@ public with sharing class BuyingCenterController {
         ];
     }
 
-    // Fetches Relationship__c records linked to the specified contactIds
-    @AuraEnabled(cacheable=true)
+    // Fetches AttitudeToOpp__c records linked to the specified contactId
+    @AuraEnabled
     public static List<AttitudeToOpp__c> getAttitudes(List<Id> contactIds){
-        // Retrieves relationships ensuring security enforcement
+        // Retrieves AttitudeToOpp ensuring security enforcement
         return [
         SELECT Id, AttitudeToOpp__c, Contact__c
         FROM AttitudeToOpp__c 

@@ -8,8 +8,9 @@
         </div>
         <div class="slds-p-horizontal_medium lgc-bg">
             <lightning-button-group>
-                <lightning-button label="New Relationship" onclick = {handleNewRelationship} variant="brand"></lightning-button>
-                <lightning-button label="New Attitude" onclick = {handleNewAttitude}></lightning-button>
+                <lightning-button label="New Relationship" onclick = {handleNewRelationship} title="Create a new Relationship" variant="brand"></lightning-button>
+                <lightning-button label="New Attitude" onclick = {handleNewAttitude} title="Create a new Attitude"></lightning-button>
+                <lightning-button-icon icon-name="utility:refresh" onclick={handleRefresh} title="Refresh the visualization" class="slds-m-left_x-small"></lightning-button-icon>
             </lightning-button-group>
         </div>
     </lightning-card>

@@ -22,11 +22,35 @@ export default class d3Utility {
         svg.append('text')
             .attr('dx', width / 10)
             .attr('dy', height / 4)
-            .text('Macht')
+            .text('Power')
             .style('fill', 'black')
             .style('text-anchor', 'middle')
             .style('font-weight', 'bold')
             .style('font-size', `${fontSize}px`)
+            .on('mouseover', function(event) {
+                const x = width / 20;
+                const y = height / 8;
+
+                // Append a tooltip text element to the SVG
+                svg.append('text')
+                    .attr('class', 'tooltip-text')
+                    .attr('fill', 'black')
+                    .append('tspan')
+                    .attr('x', x)
+                    .attr('dy', y)
+                    .text('Power explains a Members')
+                    .append('tspan')
+                    .attr('x', x)
+                    .attr('dy', height / 6 / 7)
+                    .text('direct influence in the')
+                    .append('tspan')
+                    .attr('x', x)
+                    .attr('dy', height / 6 / 7)
+                    .text('overarching decision-making')
+            })
+            .on('mouseout', function() {
+                svg.selectAll('.tooltip-text').remove();
+            });
         
         // Repeat for urgency zone
         svg.append('circle')
@@ -41,11 +65,31 @@ export default class d3Utility {
         svg.append('text')
             .attr('dx', width / 1.1)
             .attr('dy', height / 4)
-            .text('Dringlichkeit')
+            .text('Urgency')
             .style('fill', 'black')
             .style('text-anchor', 'middle')
             .style('font-weight', 'bold')
             .style('font-size', `${fontSize}px`)
+            .on('mouseover', function(event) {
+                const x = width / 1.6;
+                const y = height / 8;
+
+                // Append a tooltip text element to the SVG
+                svg.append('text')
+                    .attr('class', 'tooltip-text')
+                    .attr('fill', 'black')
+                    .append('tspan')
+                    .attr('x', x)
+                    .attr('dy', y)
+                    .text('Urgency explains a Members')
+                    .append('tspan')
+                    .attr('x', x)
+                    .attr('dy', height / 6 / 7)
+                    .text('passion about the decision')
+            })
+            .on('mouseout', function() {
+                svg.selectAll('.tooltip-text').remove();
+            });
     }
 
     // Function to get color based on relationship type

@@ -70,6 +70,13 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
             this.initializeD3(); // Call this here if data is ready
         } catch (error) {
             this.error = error;
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: "Error loading data",
+                    message: error.message,
+                    variant: "error",
+                }),
+            );
         }
     }
 
@@ -88,6 +95,8 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
     // Initialize D3 visualization
     initializeD3(){
         // Check if both contacts and relationships data are available
+        d3.select(this.template.querySelector('svg.d3')).selectAll('*').remove();
+
         if(this.contacts && this.relationships && this.attitudes){
             // Update the dimensions of the SVG to match the current container size
             this.updateSVGDimensions();
@@ -345,5 +354,20 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
                 actionName: 'new'
             },
         });
+    }
+    handleRefresh() {
+        this.fetchData()
+            .then(() => this.initializeD3())
+            .catch(error => {
+                // Handle any errors during refresh
+                this.error = error;
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error refreshing data',
+                        message: error.message,
+                        variant: 'error',
+                    }),
+                );
+            });
     }
 }

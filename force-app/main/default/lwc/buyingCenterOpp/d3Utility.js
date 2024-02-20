@@ -41,11 +41,11 @@ export default class d3Utility {
                     .text('Power explains a Members')
                     .append('tspan')
                     .attr('x', x)
-                    .attr('dy', height / 6 / 7)
+                    .attr('dy', height / 40)
                     .text('direct influence in the')
                     .append('tspan')
                     .attr('x', x)
-                    .attr('dy', height / 6 / 7)
+                    .attr('dy', height / 40)
                     .text('overarching decision-making')
             })
             .on('mouseout', function() {
@@ -84,7 +84,7 @@ export default class d3Utility {
                     .text('Urgency explains a Members')
                     .append('tspan')
                     .attr('x', x)
-                    .attr('dy', height / 6 / 7)
+                    .attr('dy', height / 40)
                     .text('passion about the decision')
             })
             .on('mouseout', function() {

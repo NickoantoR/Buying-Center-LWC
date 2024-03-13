@@ -213,9 +213,9 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
                 .enter()
                 .append('g')
                 .on('click', function(event, d) {
-                    this.handleNodeClick(d.id); // Handle click event on nodes
+                    this.handleNodeClick(d.id);                     // Handle click event on nodes
                 }.bind(this))
-                .call(drag); // Apply drag behavior
+                .call(drag);                                        // Apply drag behavior
 
                 // Append a rectangle to each node group to represent the node visually
                 node.append('rect')
@@ -337,35 +337,41 @@ export default class BuyingCenterOpp extends NavigationMixin (LightningElement) 
             },
         });
     }
+    // Handles the creation of a new relationship record.
     handleNewRelationship(){
         this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
+            type: 'standard__objectPage', // Specifies the type of navigation, in this case, to an object page.
             attributes: {
-                objectApiName: 'Relationship__c',
-                actionName: 'new'
+                objectApiName: 'Relationship__c', // The API name of the object for which the new record page should be displayed.
+                actionName: 'new' // The action to perform, which is to display the new record creation page.
             },
         });
     }
+
+    // Handles the creation of a new attitude record.
     handleNewAttitude(){
         this[NavigationMixin.Navigate]({
-            type: 'standard__objectPage',
+            type: 'standard__objectPage', // Specifies navigation to an object page.
             attributes: {
-                objectApiName: 'AttitudeToOpp__c',
-                actionName: 'new'
+                objectApiName: 'AttitudeToOpp__c', // API name of the object for the new record page.
+                actionName: 'new' // Action to display the new record creation page.
             },
         });
     }
+
+    // Handles the refresh action for the component.
     handleRefresh() {
-        this.fetchData()
-            .then(() => this.initializeD3())
+        this.fetchData() // Calls fetchData to retrieve the latest data from the server.
+            .then(() => this.initializeD3()) // Upon successful data fetch, re-initializes the D3 visualization with the new data.
             .catch(error => {
-                // Handle any errors during refresh
-                this.error = error;
+                // If an error occurs during data fetch or D3 initialization, handle it here.
+                this.error = error; // Stores the error in the component's state for potential use/display.
+                // Dispatches a toast event to inform the user of the error, providing a title and the error message.
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Error refreshing data',
-                        message: error.message,
-                        variant: 'error',
+                        title: 'Error refreshing data', // Title of the toast message.
+                        message: error.message, // The error message to display, derived from the caught error.
+                        variant: 'error', // Specifies the variant of the toast as an error, which affects its styling.
                     }),
                 );
             });

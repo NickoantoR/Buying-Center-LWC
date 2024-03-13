@@ -39,14 +39,17 @@ export default class d3Utility {
                     .attr('x', x)
                     .attr('dy', y)
                     .text('Power explains a Members')
+                    .style('font-size', `${fontSize}px`)
                     .append('tspan')
                     .attr('x', x)
                     .attr('dy', height / 40)
                     .text('direct influence in the')
+                    .style('font-size', `${fontSize}px`)
                     .append('tspan')
                     .attr('x', x)
                     .attr('dy', height / 40)
                     .text('overarching decision-making')
+                    .style('font-size', `${fontSize}px`)
             })
             .on('mouseout', function() {
                 svg.selectAll('.tooltip-text').remove();
@@ -82,10 +85,12 @@ export default class d3Utility {
                     .attr('x', x)
                     .attr('dy', y)
                     .text('Urgency explains a Members')
+                    .style('font-size', `${fontSize}px`)
                     .append('tspan')
                     .attr('x', x)
                     .attr('dy', height / 40)
                     .text('passion about the decision')
+                    .style('font-size', `${fontSize}px`)
             })
             .on('mouseout', function() {
                 svg.selectAll('.tooltip-text').remove();
@@ -129,9 +134,10 @@ export default class d3Utility {
     // Method to ensure nodes stay within the SVG boundaries
     enforceBoundaries(nodeData, width, height) {
         nodeData.forEach(node => {
-            const nodeRadius = width / 10; // Adjust based on your node size
-            node.x = Math.max(nodeRadius, Math.min(width - nodeRadius, node.x));
-            node.y = Math.max(nodeRadius, Math.min(height - nodeRadius, node.y));
+            const XnodeRadius = width / 10; // Adjust based on your node Xsize
+            const YnodeRadius = height / 10; // Adjust based on your node Ysize
+            node.x = Math.max(XnodeRadius, Math.min(width - XnodeRadius, node.x));
+            node.y = Math.max(YnodeRadius, Math.min(height - YnodeRadius, node.y));
         });
     }
 }
